@@ -310,13 +310,32 @@
             font-size: 0.7rem;
         }
 
-        /* Global Map */
+        /* Global Map - Situation Room Style */
         .world-map {
             width: 100%;
-            height: 350px;
+            height: 400px;
             position: relative;
-            background: #080808;
+            background: #020a08;
             overflow: hidden;
+            border: 1px solid #0a3020;
+        }
+
+        .world-map::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: repeating-linear-gradient(
+                0deg,
+                transparent,
+                transparent 2px,
+                rgba(0, 40, 30, 0.03) 2px,
+                rgba(0, 40, 30, 0.03) 4px
+            );
+            pointer-events: none;
+            z-index: 10;
         }
 
         .world-map svg {
@@ -327,17 +346,52 @@
             height: 100%;
         }
 
+        .coord-label {
+            position: absolute;
+            font-size: 0.5rem;
+            color: #0f6040;
+            font-family: 'SF Mono', monospace;
+            pointer-events: none;
+            z-index: 5;
+        }
+
+        .coord-label.lat {
+            left: 5px;
+            transform: translateY(-50%);
+        }
+
+        .coord-label.lon {
+            bottom: 3px;
+            transform: translateX(-50%);
+        }
+
+        .map-corner-label {
+            position: absolute;
+            font-size: 0.5rem;
+            color: #0f6040;
+            font-family: 'SF Mono', monospace;
+            letter-spacing: 0.1em;
+            z-index: 15;
+        }
+
+        .map-corner-label.tl { top: 8px; left: 10px; }
+        .map-corner-label.tr { top: 8px; right: 10px; }
+        .map-corner-label.bl { bottom: 8px; left: 10px; }
+        .map-corner-label.br { bottom: 8px; right: 10px; }
+
         .hotspot {
             position: absolute;
             transform: translate(-50%, -50%);
             pointer-events: none;
+            z-index: 20;
         }
 
         .hotspot-dot {
-            width: 12px;
-            height: 12px;
+            width: 10px;
+            height: 10px;
             border-radius: 50%;
             position: relative;
+            border: 1px solid;
         }
 
         .hotspot-dot::before {
@@ -352,63 +406,80 @@
             animation: pulse-ring 2s ease-out infinite;
         }
 
+        .hotspot-dot::after {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            border: 1px solid;
+            opacity: 0.4;
+        }
+
         .hotspot.low .hotspot-dot {
-            background: var(--green);
-            box-shadow: 0 0 10px var(--green);
+            background: #00ff88;
+            border-color: #00ff88;
+            box-shadow: 0 0 10px #00ff88, 0 0 20px rgba(0,255,136,0.3);
         }
-        .hotspot.low .hotspot-dot::before {
-            background: var(--green);
-        }
+        .hotspot.low .hotspot-dot::before { background: #00ff88; }
+        .hotspot.low .hotspot-dot::after { border-color: #00ff88; }
 
         .hotspot.elevated .hotspot-dot {
-            background: var(--yellow);
-            box-shadow: 0 0 15px var(--yellow);
+            background: #ffcc00;
+            border-color: #ffcc00;
+            box-shadow: 0 0 10px #ffcc00, 0 0 20px rgba(255,204,0,0.3);
         }
-        .hotspot.elevated .hotspot-dot::before {
-            background: var(--yellow);
-        }
+        .hotspot.elevated .hotspot-dot::before { background: #ffcc00; }
+        .hotspot.elevated .hotspot-dot::after { border-color: #ffcc00; }
 
         .hotspot.high .hotspot-dot {
-            background: var(--red);
-            box-shadow: 0 0 20px var(--red);
+            background: #ff3333;
+            border-color: #ff3333;
+            box-shadow: 0 0 15px #ff3333, 0 0 30px rgba(255,51,51,0.4);
             animation: glow-high 1s ease-in-out infinite alternate;
         }
-        .hotspot.high .hotspot-dot::before {
-            background: var(--red);
-        }
+        .hotspot.high .hotspot-dot::before { background: #ff3333; }
+        .hotspot.high .hotspot-dot::after { border-color: #ff3333; animation: target-lock 1.5s linear infinite; }
 
         @keyframes pulse-ring {
-            0% {
-                width: 100%;
-                height: 100%;
-                opacity: 0.8;
-            }
-            100% {
-                width: 300%;
-                height: 300%;
-                opacity: 0;
-            }
+            0% { width: 100%; height: 100%; opacity: 0.6; }
+            100% { width: 250%; height: 250%; opacity: 0; }
         }
 
         @keyframes glow-high {
-            from { box-shadow: 0 0 15px var(--red); }
-            to { box-shadow: 0 0 30px var(--red), 0 0 50px var(--red); }
+            from { box-shadow: 0 0 10px #ff3333, 0 0 20px rgba(255,51,51,0.3); }
+            to { box-shadow: 0 0 20px #ff3333, 0 0 40px rgba(255,51,51,0.5); }
+        }
+
+        @keyframes target-lock {
+            from { transform: translate(-50%, -50%) rotate(0deg); }
+            to { transform: translate(-50%, -50%) rotate(360deg); }
         }
 
         .hotspot-label {
             position: absolute;
-            top: 18px;
+            top: 20px;
             left: 50%;
             transform: translateX(-50%);
             font-size: 0.55rem;
-            color: var(--text);
+            font-family: 'SF Mono', monospace;
+            color: #00ff88;
             white-space: nowrap;
-            text-shadow: 0 0 3px var(--bg), 0 0 5px var(--bg);
+            text-shadow: 0 0 5px rgba(0,255,136,0.5);
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
         }
 
+        .hotspot.elevated .hotspot-label { color: #ffcc00; text-shadow: 0 0 5px rgba(255,204,0,0.5); }
+        .hotspot.high .hotspot-label { color: #ff3333; text-shadow: 0 0 5px rgba(255,51,51,0.5); }
+
         .hotspot-info {
-            font-size: 0.5rem;
-            color: var(--text-dim);
+            font-size: 0.45rem;
+            color: #0a8060;
+            text-transform: none;
         }
 
         .loading-msg {
@@ -878,7 +949,7 @@
             return results;
         }
 
-        // Render the global map
+        // Render the global map - Situation Room Style
         function renderGlobalMap(activityData) {
             const panel = document.getElementById('mapPanel');
 
@@ -886,7 +957,6 @@
 
             INTEL_HOTSPOTS.forEach(spot => {
                 const activity = activityData[spot.id] || { level: 'low', score: 0 };
-                // Convert lat/lon to percentage position on equirectangular projection
                 const xPercent = ((spot.lon + 180) / 360) * 100;
                 const yPercent = ((90 - spot.lat) / 180) * 100;
 
@@ -901,59 +971,94 @@
                 `;
             });
 
-            // Simple inline SVG world map
-            const worldMapSVG = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 2000 1000" preserveAspectRatio="xMidYMid slice">
-                <rect width="2000" height="1000" fill="#080808"/>
-                <g fill="#1a1a1a" stroke="#2d2d2d" stroke-width="1">
-                    <!-- North America -->
-                    <path d="M165,195 L205,155 L255,135 L315,115 L375,105 L420,115 L455,140 L485,120 L530,125 L545,145 L530,175 L555,195 L560,235 L535,275 L500,295 L475,340 L430,360 L395,340 L355,365 L320,340 L285,355 L255,330 L235,295 L200,285 L175,255 L160,220Z"/>
-                    <!-- Greenland -->
-                    <path d="M545,85 L605,55 L665,65 L695,95 L680,135 L625,155 L575,145 L550,115Z"/>
-                    <!-- South America -->
-                    <path d="M355,420 L400,395 L445,415 L485,455 L510,515 L525,585 L510,665 L475,735 L420,755 L375,715 L345,645 L340,575 L355,505 L345,455Z"/>
-                    <!-- Europe -->
-                    <path d="M880,135 L925,115 L985,120 L1030,135 L1060,160 L1045,195 L1005,215 L960,205 L920,225 L885,215 L865,175 L870,145Z"/>
-                    <!-- UK/Ireland -->
-                    <path d="M835,155 L865,145 L875,175 L855,195 L830,185Z"/>
-                    <path d="M815,175 L835,165 L840,185 L825,195Z"/>
-                    <!-- Scandinavia -->
-                    <path d="M925,75 L965,55 L1005,75 L1020,115 L995,145 L955,135 L930,105Z"/>
-                    <!-- Africa -->
-                    <path d="M885,280 L945,260 L1015,275 L1075,320 L1110,385 L1120,465 L1095,545 L1045,615 L975,645 L905,625 L855,565 L845,485 L860,405 L880,335Z"/>
-                    <!-- Middle East -->
-                    <path d="M1045,225 L1105,215 L1155,245 L1175,295 L1145,335 L1095,345 L1055,315 L1045,265Z"/>
-                    <!-- Russia -->
-                    <path d="M1075,75 L1205,45 L1385,35 L1545,55 L1665,85 L1745,65 L1825,95 L1865,135 L1845,175 L1755,195 L1665,175 L1545,195 L1425,185 L1305,205 L1205,195 L1125,175 L1075,135Z"/>
-                    <!-- India -->
-                    <path d="M1225,285 L1295,265 L1345,295 L1365,355 L1345,425 L1295,465 L1235,445 L1195,385 L1205,325Z"/>
-                    <!-- China -->
-                    <path d="M1385,195 L1505,175 L1605,195 L1665,235 L1685,305 L1645,365 L1565,385 L1485,365 L1405,385 L1345,345 L1345,275 L1385,235Z"/>
-                    <!-- Southeast Asia -->
-                    <path d="M1445,395 L1505,385 L1565,415 L1585,465 L1545,515 L1485,525 L1435,495 L1425,445Z"/>
-                    <!-- Japan -->
-                    <path d="M1725,225 L1765,205 L1795,235 L1785,285 L1745,305 L1715,275Z"/>
-                    <!-- Australia -->
-                    <path d="M1545,585 L1665,555 L1765,595 L1815,665 L1785,755 L1695,785 L1595,755 L1545,685Z"/>
-                    <!-- New Zealand -->
-                    <path d="M1855,745 L1885,725 L1905,765 L1885,805 L1855,785Z"/>
-                    <!-- Indonesia -->
-                    <path d="M1485,535 L1545,525 L1605,545 L1575,575 L1515,565Z"/>
+            // Generate coordinate labels
+            let coordLabels = '';
+            // Latitude labels (every 30 degrees)
+            [-60, -30, 0, 30, 60].forEach(lat => {
+                const yPercent = ((90 - lat) / 180) * 100;
+                const label = lat === 0 ? '0°' : (lat > 0 ? `${lat}°N` : `${Math.abs(lat)}°S`);
+                coordLabels += `<div class="coord-label lat" style="top: ${yPercent}%">${label}</div>`;
+            });
+            // Longitude labels (every 60 degrees)
+            [-120, -60, 0, 60, 120, 180].forEach(lon => {
+                const xPercent = ((lon + 180) / 360) * 100;
+                const label = lon === 0 ? '0°' : (lon > 0 ? `${lon}°E` : `${Math.abs(lon)}°W`);
+                coordLabels += `<div class="coord-label lon" style="left: ${xPercent}%">${label}</div>`;
+            });
+
+            // Tactical SVG map with proper grid
+            const worldMapSVG = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 360 180" preserveAspectRatio="none">
+                <defs>
+                    <pattern id="smallGrid" width="10" height="10" patternUnits="userSpaceOnUse">
+                        <path d="M 10 0 L 0 0 0 10" fill="none" stroke="#0a2a20" stroke-width="0.3"/>
+                    </pattern>
+                    <pattern id="grid" width="30" height="30" patternUnits="userSpaceOnUse">
+                        <rect width="30" height="30" fill="url(#smallGrid)"/>
+                        <path d="M 30 0 L 0 0 0 30" fill="none" stroke="#0d3a2d" stroke-width="0.5"/>
+                    </pattern>
+                </defs>
+
+                <!-- Background -->
+                <rect width="360" height="180" fill="#020a08"/>
+
+                <!-- Grid -->
+                <rect width="360" height="180" fill="url(#grid)"/>
+
+                <!-- Major grid lines -->
+                <g stroke="#0f4035" stroke-width="0.8">
+                    <!-- Equator -->
+                    <line x1="0" y1="90" x2="360" y2="90"/>
+                    <!-- Prime Meridian -->
+                    <line x1="180" y1="0" x2="180" y2="180"/>
+                    <!-- Tropics -->
+                    <line x1="0" y1="66.5" x2="360" y2="66.5" stroke-dasharray="2,2" opacity="0.5"/>
+                    <line x1="0" y1="113.5" x2="360" y2="113.5" stroke-dasharray="2,2" opacity="0.5"/>
                 </g>
-                <!-- Grid lines -->
-                <g stroke="#1a1a1a" stroke-width="0.5" opacity="0.5">
-                    <line x1="0" y1="500" x2="2000" y2="500"/>
-                    <line x1="1000" y1="0" x2="1000" y2="1000"/>
-                    <line x1="0" y1="250" x2="2000" y2="250"/>
-                    <line x1="0" y1="750" x2="2000" y2="750"/>
-                    <line x1="500" y1="0" x2="500" y2="1000"/>
-                    <line x1="1500" y1="0" x2="1500" y2="1000"/>
+
+                <!-- Continents with glow effect -->
+                <g fill="#0a2018" stroke="#0f5040" stroke-width="0.5">
+                    <!-- North America -->
+                    <path d="M30,35 L45,28 L60,25 L75,28 L90,25 L105,30 L108,38 L100,45 L95,52 L85,58 L78,62 L70,60 L60,65 L52,60 L45,62 L38,55 L32,50 L28,42Z"/>
+                    <!-- Greenland -->
+                    <path d="M100,18 L115,12 L128,15 L132,22 L125,30 L112,32 L102,28Z"/>
+                    <!-- South America -->
+                    <path d="M65,78 L78,72 L88,80 L95,95 L92,115 L82,130 L70,132 L60,120 L58,100 L62,88Z"/>
+                    <!-- Europe -->
+                    <path d="M160,28 L175,24 L190,28 L198,35 L192,42 L182,45 L172,42 L165,48 L158,42 L155,35Z"/>
+                    <!-- UK -->
+                    <path d="M150,32 L158,30 L160,38 L154,42 L148,38Z"/>
+                    <!-- Africa -->
+                    <path d="M160,55 L178,50 L195,58 L205,75 L202,100 L188,118 L168,120 L155,108 L152,85 L158,68Z"/>
+                    <!-- Middle East -->
+                    <path d="M195,48 L212,45 L225,55 L222,68 L208,72 L195,65Z"/>
+                    <!-- Russia/North Asia -->
+                    <path d="M195,18 L230,12 L270,15 L305,22 L330,18 L350,25 L355,35 L345,42 L320,40 L290,45 L260,42 L230,45 L205,40 L195,32Z"/>
+                    <!-- South Asia / India -->
+                    <path d="M220,55 L238,50 L250,60 L252,78 L242,92 L225,88 L215,75 L218,62Z"/>
+                    <!-- China / East Asia -->
+                    <path d="M255,42 L285,38 L310,45 L320,58 L312,72 L295,78 L275,75 L258,78 L248,68 L250,52Z"/>
+                    <!-- Southeast Asia -->
+                    <path d="M265,82 L282,78 L298,88 L295,100 L280,105 L268,98Z"/>
+                    <!-- Japan -->
+                    <path d="M315,45 L325,42 L330,52 L325,60 L318,55Z"/>
+                    <!-- Australia -->
+                    <path d="M280,115 L305,108 L325,118 L332,135 L320,148 L295,150 L278,140 L275,125Z"/>
+                    <!-- Indonesia -->
+                    <path d="M268,105 L290,102 L305,108 L298,115 L278,112Z"/>
                 </g>
             </svg>`;
+
+            const timestamp = new Date().toISOString().replace('T', ' ').substring(0, 19) + ' UTC';
 
             panel.innerHTML = `
                 <div class="world-map">
                     ${worldMapSVG}
                     ${hotspotsHTML}
+                    ${coordLabels}
+                    <div class="map-corner-label tl">GLOBAL ACTIVITY MONITOR</div>
+                    <div class="map-corner-label tr">CLASSIFICATION: OPEN SOURCE</div>
+                    <div class="map-corner-label bl">PROJECTION: EQUIRECTANGULAR</div>
+                    <div class="map-corner-label br">${timestamp}</div>
                 </div>
             `;
         }
