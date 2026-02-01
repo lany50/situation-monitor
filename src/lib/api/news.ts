@@ -4,7 +4,6 @@
 
 import type { NewsItem, NewsCategory } from '$lib/types';
 import { API_DELAYS } from '$lib/config/api';
-import { fetchCategoryViaTavily } from './tavily';
 
 /**
  * Delay helper
@@ -21,7 +20,29 @@ function delay(ms: number): Promise<void> {
  * Fetch news for a specific category using GDELT via proxy
  */
 export async function fetchCategoryNews(category: NewsCategory): Promise<NewsItem[]> {
-	return fetchCategoryViaTavily(category);
+	try {
+		const endpoint = `/.netlify/functions/tavily-news?category=${encodeURIComponent(category)}`;
+		const res = await fetch(endpoint);
+		if (!res.ok) {
+			return [];
+		}
+		const data = await res.json();
+		const results = (data?.results ?? []) as Array<{ title: string; url: string; content?: string }>;
+		const ts = Date.now();
+		return results.map((r, index) => ({
+			id: `tav-${category}-${index}`,
+			title: r.title || r.url || '新闻',
+			link: r.url,
+			pubDate: undefined,
+			timestamp: ts,
+			description: r.content?.slice(0, 160),
+			content: r.content,
+			source: 'Tavily',
+			category
+		}));
+	} catch {
+		return [];
+	}
 }
 
 /** All news categories in fetch order */
