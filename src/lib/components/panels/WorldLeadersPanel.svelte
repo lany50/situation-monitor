@@ -19,9 +19,9 @@
 	}
 </script>
 
-<Panel id="leaders" title="World Leaders" {count} {loading} {error}>
+<Panel id="leaders" title="世界领导人" {count} {loading} {error}>
 	{#if leaders.length === 0 && !loading && !error}
-		<div class="empty-state">No leaders data available</div>
+		<div class="empty-state">暂无领导人数据</div>
 	{:else}
 		<div class="leaders-grid">
 			{#each leaders as leader (leader.id)}
@@ -41,7 +41,7 @@
 						{/if}
 					</div>
 					<div class="leader-meta">
-						<span class="leader-since">Since {leader.since}</span>
+						<span class="leader-since">任职于 {leader.since}</span>
 						<span class="leader-party">{leader.party}</span>
 					</div>
 					{#if leader.focus && leader.focus.length > 0}

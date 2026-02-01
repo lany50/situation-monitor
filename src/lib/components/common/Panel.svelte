@@ -67,7 +67,7 @@
 				{@render actions()}
 			{/if}
 			{#if collapsible}
-				<button class="panel-collapse-btn" onclick={handleCollapse} aria-label="Toggle panel">
+				<button class="panel-collapse-btn" onclick={handleCollapse} aria-label="切换面板">
 					{collapsed ? '▼' : '▲'}
 				</button>
 			{/if}
@@ -78,7 +78,7 @@
 		{#if error}
 			<div class="error-msg">{error}</div>
 		{:else if loading}
-			<div class="loading-msg">Loading...</div>
+			<div class="loading-msg">加载中…</div>
 		{:else}
 			{@render children()}
 		{/if}

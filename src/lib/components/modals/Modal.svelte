@@ -37,7 +37,7 @@
 				{#if header}
 					{@render header()}
 				{/if}
-				<button class="modal-close" onclick={onClose} aria-label="Close">×</button>
+				<button class="modal-close" onclick={onClose} aria-label="关闭">×</button>
 			</div>
 
 			<div class="modal-content">

@@ -57,7 +57,7 @@
 	}
 </script>
 
-<Panel id="fed" title="Federal Reserve" count={newsState.items.length} {loading} {error}>
+<Panel id="fed" title="联邦储备" count={newsState.items.length} {loading} {error}>
 	<!-- Economic Indicators -->
 	{#if hasApiKey && indicatorList.length > 0}
 		<div class="indicators-section">
@@ -75,7 +75,7 @@
 		</div>
 	{:else if !hasApiKey && !loading}
 		<div class="no-api-key">
-			<span class="no-api-key-text">Add VITE_FRED_API_KEY for economic indicators</span>
+			<span class="no-api-key-text">如需显示经济指标，请添加 VITE_FRED_API_KEY</span>
 		</div>
 	{/if}
 
@@ -83,14 +83,14 @@
 	{#if videoItems.length > 0}
 		<div class="video-section">
 			<div class="section-header">
-				<span class="section-title">Speeches & Video</span>
+				<span class="section-title">讲话与视频</span>
 				<a
 					href="https://www.federalreserve.gov/live-broadcast.htm"
 					target="_blank"
 					rel="noopener noreferrer"
 					class="live-link"
 				>
-					Live Broadcast
+					直播
 				</a>
 			</div>
 			<div class="video-list">
@@ -101,7 +101,7 @@
 							<div class="video-title">{item.title}</div>
 							<div class="video-meta">
 								{#if item.isPowellRelated}
-									<Badge text="POWELL" variant="warning" />
+									<Badge text="鲍威尔" variant="warning" />
 								{/if}
 								<span>{getRelativeTime(item.pubDate)}</span>
 							</div>
@@ -115,7 +115,7 @@
 	<!-- News Feed -->
 	<div class="news-section">
 		{#if newsState.items.length === 0 && !loading && !error}
-			<div class="empty-state">No Fed news available</div>
+			<div class="empty-state">暂无联储新闻</div>
 		{:else}
 			<div class="fed-news-list">
 				{#each newsState.items as item (item.id)}
@@ -127,7 +127,7 @@
 									<Badge text="POWELL" variant="warning" />
 								{/if}
 								{#if item.hasVideo}
-									<Badge text="VIDEO" variant="info" />
+									<Badge text="视频" variant="info" />
 								{/if}
 							</div>
 							{#if item.pubDate}

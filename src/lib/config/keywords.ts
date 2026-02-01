@@ -68,6 +68,14 @@ export const REGION_KEYWORDS: Record<string, string[]> = {
 	AFRICA: ['africa', 'sahel', 'niger', 'sudan', 'ethiopia', 'somalia']
 };
 
+const REGION_NAMES: Record<string, string> = {
+	EUROPE: '欧洲',
+	MENA: '中东北非',
+	APAC: '亚太',
+	AMERICAS: '美洲',
+	AFRICA: '非洲'
+};
+
 export const TOPIC_KEYWORDS: Record<string, string[]> = {
 	CYBER: ['cyber', 'hack', 'ransomware', 'malware', 'breach', 'apt', 'vulnerability'],
 	NUCLEAR: ['nuclear', 'icbm', 'warhead', 'nonproliferation', 'uranium', 'plutonium'],
@@ -97,7 +105,7 @@ export function detectRegion(text: string): string | null {
 	const lowerText = text.toLowerCase();
 	for (const [region, keywords] of Object.entries(REGION_KEYWORDS)) {
 		if (keywords.some((k) => lowerText.includes(k))) {
-			return region;
+			return REGION_NAMES[region] || region;
 		}
 	}
 	return null;

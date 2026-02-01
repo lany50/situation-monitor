@@ -28,7 +28,7 @@
 		criticalKeywords: string[] = []
 	): { level: string; text: string } {
 		if (newsItems.length === 0) {
-			return { level: 'monitoring', text: 'MONITORING' };
+			return { level: 'monitoring', text: '监控' };
 		}
 
 		const now = Date.now();
@@ -42,12 +42,12 @@
 		);
 
 		if (hasCritical || recentNews.length >= 3) {
-			return { level: 'critical', text: 'CRITICAL' };
+			return { level: 'critical', text: '严重' };
 		}
 		if (recentNews.length >= 1) {
-			return { level: 'elevated', text: 'ELEVATED' };
+			return { level: 'elevated', text: '提升' };
 		}
-		return { level: 'monitoring', text: 'MONITORING' };
+		return { level: 'monitoring', text: '监控' };
 	}
 </script>
 
@@ -66,7 +66,7 @@
 		</div>
 
 		{#if news.length === 0 && !loading && !error}
-			<div class="empty-state">No recent news</div>
+			<div class="empty-state">暂无相关新闻</div>
 		{:else}
 			<div class="situation-news">
 				{#each news.slice(0, 8) as item (item.id)}

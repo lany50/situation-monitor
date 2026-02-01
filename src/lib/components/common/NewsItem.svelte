@@ -24,7 +24,7 @@
 		<div class="item-source">
 			{item.source}
 			{#if showAlert && item.isAlert}
-				<span class="alert-tag">ALERT</span>
+				<span class="alert-tag">警报</span>
 			{/if}
 		</div>
 	{/if}

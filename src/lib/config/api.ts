@@ -27,6 +27,15 @@ export const FRED_API_KEY = browser
 export const FRED_BASE_URL = 'https://api.stlouisfed.org/fred';
 
 /**
+ * Tavily API key
+ */
+export const TAVILY_API_KEY = browser
+	? (import.meta.env?.VITE_TAVILY_API_KEY ?? '')
+	: (process.env.VITE_TAVILY_API_KEY ?? '');
+
+export const TAVILY_BASE_URL = 'https://api.tavily.com/search';
+
+/**
  * Check if we're in development mode
  * Uses import.meta.env which is available in both browser and test environments
  */
@@ -58,14 +67,25 @@ export async function fetchWithProxy(url: string): Promise<Response> {
 		if (response.ok) {
 			return response;
 		}
-		// If we get an error response, try fallback
 		logger.warn('API', `Primary proxy failed (${response.status}), trying fallback`);
 	} catch (error) {
 		logger.warn('API', 'Primary proxy error, trying fallback:', error);
 	}
 
 	// Fallback to secondary proxy
-	return fetch(CORS_PROXIES.fallback + encodedUrl);
+	try {
+		const response = await fetch(CORS_PROXIES.fallback + encodedUrl);
+		if (response.ok) {
+			return response;
+		}
+		logger.warn('API', `Fallback proxy failed (${response.status}), trying tertiary`);
+	} catch (error) {
+		logger.warn('API', 'Fallback proxy error, trying tertiary:', error);
+	}
+
+	// Tertiary proxy
+	const tertiary = 'https://api.allorigins.win/raw?url=';
+	return fetch(tertiary + encodedUrl);
 }
 
 /**

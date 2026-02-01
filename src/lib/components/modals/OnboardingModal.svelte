@@ -31,11 +31,11 @@
 	<div class="modal-overlay">
 		<div class="modal onboarding-modal">
 			<div class="modal-header">
-				<button class="close-btn" onclick={handleClose} aria-label="Skip onboarding">
+				<button class="close-btn" onclick={handleClose} aria-label="跳过引导">
 					&times;
 				</button>
-				<h2>Welcome to Situation Monitor</h2>
-				<p class="subtitle">Choose a dashboard configuration to get started</p>
+				<h2>欢迎使用舆情监测</h2>
+				<p class="subtitle">请选择一个仪表盘配置开始使用</p>
 			</div>
 
 			<div class="preset-grid">
@@ -45,13 +45,13 @@
 						<div class="preset-icon">{preset.icon}</div>
 						<div class="preset-name">{preset.name}</div>
 						<div class="preset-description">{preset.description}</div>
-						<div class="preset-panel-count">{preset.panels.length} panels</div>
+						<div class="preset-panel-count">{preset.panels.length} 个面板</div>
 					</button>
 				{/each}
 			</div>
 
 			<div class="modal-footer">
-				<p class="hint">You can change this later in Settings</p>
+				<p class="hint">你可以稍后在“设置”中更改</p>
 			</div>
 		</div>
 	</div>
